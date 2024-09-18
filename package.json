@@ -9,7 +9,7 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "@clerk/nextjs": "^4.1.0",   // Add Clerk dependency
-    "stripe": "^11.11.0"         // Add Stripe dependency
+    "@clerk/nextjs": "^4.1.0",   
+    "stripe": "^11.11.0"         
   }
 }
