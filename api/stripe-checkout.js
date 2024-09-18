@@ -1,14 +1,16 @@
+// api/stripe-checkout.js
+
 import Stripe from 'stripe';
-import { getAuth } from '@clerk/nextjs/server';
+import { withAuth } from '@clerk/nextjs/server';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
+export default withAuth(async function handler(req, res) {
   // Add CORS headers to allow Webflow domain
   res.setHeader('Access-Control-Allow-Origin', 'https://www.advancers.org');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
   // Handle preflight (OPTIONS) request
   if (req.method === 'OPTIONS') {
     console.log('Preflight request received and handled.');
@@ -17,8 +19,8 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      // Authenticate the user using Clerk
-      const { userId } = getAuth(req);
+      // Access authentication context from req.auth
+      const { userId } = req.auth;
 
       if (!userId) {
         console.error('Unauthorized access attempt: No user ID found.');
@@ -36,9 +38,9 @@ export default async function handler(req, res) {
           },
         ],
         mode: 'payment',
-        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/platform`,  // URL after successful payment
-        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,    // URL if payment is canceled
-        client_reference_id: userId,  // Attach Clerk user ID to track session in Stripe
+        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/platform`,
+        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,
+        client_reference_id: userId,
       });
 
       // Log the created session
@@ -54,4 +56,4 @@ export default async function handler(req, res) {
     res.setHeader('Allow', ['POST']);
     res.status(405).end('Method Not Allowed');
   }
-}
+});
