@@ -1,12 +1,12 @@
 // api/stripe-checkout.js
 
 import Stripe from 'stripe';
-import { withAuth } from '@clerk/nextjs';
+import { withAuth } from '@clerk/nextjs'; // Ensure correct import
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default withAuth(async function handler(req, res) {
-  // Add CORS headers to allow Webflow domain
+  // Add CORS headers at the very top
   res.setHeader('Access-Control-Allow-Origin', 'https://www.advancers.org');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -33,7 +33,7 @@ export default withAuth(async function handler(req, res) {
       const session = await stripe.checkout.sessions.create({
         line_items: [
           {
-            price: 'price_1PyZeWFT3MWkDNHt66US6J7n',  // Replace with your actual Stripe price ID
+            price: 'price_1PyZeWFT3MWkDNHt66US6J7n', // Replace with your actual Stripe price ID
             quantity: 1,
           },
         ],
