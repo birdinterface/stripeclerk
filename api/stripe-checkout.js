@@ -1,7 +1,7 @@
 // api/stripe-checkout.js
 
 import Stripe from 'stripe';
-import { withAuth } from '@clerk/nextjs/server';
+import { withAuth } from '@clerk/nextjs';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
