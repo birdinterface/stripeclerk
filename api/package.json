@@ -1,0 +1,13 @@
+{
+     "name": "stripeclerk-new",
+     "version": "1.0.0",
+     "description": "Integration of Stripe and Clerk for advancers.org",
+     "main": "index.js",
+     "scripts": {
+       "test": "echo \"Error: no test specified\" && exit 1"
+     },
+     "dependencies": {
+       "stripe": "^12.0.0",
+       "@clerk/nextjs": "^4.23.2"
+     }
+   }
