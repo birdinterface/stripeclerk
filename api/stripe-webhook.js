@@ -1,8 +1,7 @@
 import Stripe from 'stripe';
-import { Clerk } from '@clerk/clerk-sdk-node';
+import { clerkClient } from '@clerk/clerk-sdk-node';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const clerk = Clerk({ secretKey: process.env.CLERK_SECRET_KEY });
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -15,18 +14,23 @@ export default async function handler(req, res) {
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
+    console.error('Error verifying webhook:', err);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
+    console.log(`Payment successful for session ID: ${session.id}`);
     try {
-      await clerk.users.updateUser(session.metadata.userId, {
+      await clerkClient.users.updateUserMetadata(session.metadata?.userId, {
         publicMetadata: {
-          hasPurchased: true,
-          purchaseDate: new Date().toISOString()
-        },
+          stripe: {
+            status: session.status,
+            payment: session.payment_status
+          }
+        }
       });
+      console.log('Successfully updated user metadata');
     } catch (err) {
       console.error('Error updating user metadata:', err);
       return res.status(500).end();
