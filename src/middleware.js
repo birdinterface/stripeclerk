@@ -1,18 +1,17 @@
-// middleware.js
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-import { NextResponse } from 'next/server';
-import { authMiddleware } from '@clerk/nextjs';
+const isPublicRoute = createRouteMatcher(['/', '/api/stripe-webhook']);
 
-export default function middleware(req) {
-  if (req.method === 'OPTIONS') {
-    return NextResponse.next();
+export default clerkMiddleware((auth, request) => {
+  if (!isPublicRoute(request)) {
+    auth().protect();
   }
-
-  return authMiddleware({
-    publicRoutes: ['/', '/api/stripe-webhook'],
-  })(req);
-}
+});
 
 export const config = {
-  matcher: ['/(.*)'],
+  matcher: [
+    '/((?!_next|[^?]*\\..*).*)',
+    '/',
+    '/(api|trpc)(.*)',
+  ],
 };
