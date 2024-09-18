@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/stripe-checkout.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/stripe-webhook.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "next.config.js",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    { "src": "/api/stripe-checkout", "dest": "/api/stripe-checkout.js" },
+    { "src": "/api/stripe-webhook", "dest": "/api/stripe-webhook.js" }
+  ]
+}
