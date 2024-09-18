@@ -1,11 +1,18 @@
 // middleware.js
 
+import { NextResponse } from 'next/server';
 import { authMiddleware } from '@clerk/nextjs';
 
-export default authMiddleware({
-  publicRoutes: ['/', '/api/stripe-webhook'],  // Define routes that don't require authentication
-});
+export default function middleware(req) {
+  if (req.method === 'OPTIONS') {
+    return NextResponse.next();
+  }
+
+  return authMiddleware({
+    publicRoutes: ['/', '/api/stripe-webhook'],
+  })(req);
+}
 
 export const config = {
-  matcher: ['/(.*)'],  // Apply middleware to all routes
+  matcher: ['/(.*)'],
 };
