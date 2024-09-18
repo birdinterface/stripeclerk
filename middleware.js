@@ -7,7 +7,7 @@ export default authMiddleware({
   publicRoutes: ['/'],  // Define any routes that don't require authentication (e.g., homepage)
 });
 
-// Apply the middleware to API routes and other protected routes
+// Apply the middleware to ALL routes, including all API routes
 export const config = {
-  matcher: ['/api/:path*'],  // Apply middleware to all API routes (e.g., /api/stripe-checkout)
+  matcher: ['/(api|trpc)(.*)'],  // This will apply middleware to all API routes and any other paths under `/api` or `/trpc`
 };
