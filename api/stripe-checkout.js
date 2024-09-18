@@ -20,8 +20,8 @@ import Stripe from 'stripe';
              }
            ],
            mode: 'payment',
-           success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/platform`,
-           cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,
+           success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
+           cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
            client_reference_id: userId,
          });
 
