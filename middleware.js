@@ -1,17 +1,19 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+// middleware.js
 
-const isPublicRoute = createRouteMatcher(['/', '/api/stripe-webhook']);
+import { authMiddleware } from '@clerk/nextjs';
 
-export default clerkMiddleware((auth, request) => {
-  if (!isPublicRoute(request)) {
-    getauth().protect();
-  }
+export default authMiddleware({
+  // Define your public routes here
+  publicRoutes: ['/', '/api/stripe-webhook'],
 });
 
 export const config = {
   matcher: [
-    '/((?!_next|[^?]*\\..*).*)',
-    '/',
-    '/(api|trpc)(.*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next
+     * - static files (e.g., favicon.ico, robots.txt)
+     */
+    '/((?!_next|.*\\..*).*)',
   ],
 };
