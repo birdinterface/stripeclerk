@@ -12,9 +12,7 @@
     "react-dom": "latest",
     "@clerk/nextjs": "^4.1.0",   
     "stripe": "^11.11.0"         
-  }
-}
-{
+  },
   "engines": {
     "node": ">=14.0.0"
   }
