@@ -50,8 +50,8 @@ export default async (req, res) => {
           },
         ],
         mode: 'payment',
-        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/platform`,
-        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,
+        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}platform`,
+        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}pricing`,
         client_reference_id: userId,
         automatic_tax: { enabled: true },
       });
