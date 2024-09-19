@@ -4,7 +4,7 @@ const isPublicRoute = createRouteMatcher(['/', '/api/stripe-webhook']);
 
 export default clerkMiddleware((auth, request) => {
   if (!isPublicRoute(request)) {
-    auth().protect();
+    getauth().protect();
   }
 });
 
