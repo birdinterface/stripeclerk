@@ -3,10 +3,6 @@
 import { sessions } from '@clerk/clerk-sdk-node';
 import Stripe from 'stripe';
 
-export const config = {
-  runtime: 'nodejs', // Ensure the API route runs in the Node.js environment
-};
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async (req, res) => {
