@@ -1,9 +1,10 @@
 // api/stripe-checkout.js
 
-import { sessions } from '@clerk/clerk-sdk-node';
+import { Clerk } from '@clerk/clerk-sdk-node';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const clerk = new Clerk({ secretKey: process.env.CLERK_SECRET_KEY });
 
 export default async (req, res) => {
   // Add CORS headers
@@ -27,7 +28,7 @@ export default async (req, res) => {
 
   try {
     // Verify the session token
-    const session = await sessions.verifySessionToken(token);
+    const session = await clerk.sessions.verifySessionToken(token);
     const userId = session.userId;
 
     if (!userId) {
