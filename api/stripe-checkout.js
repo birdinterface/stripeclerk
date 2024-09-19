@@ -1,11 +1,11 @@
 // api/stripe-checkout.js
 
-import Stripe from 'stripe';
-import { auth } from '@clerk/nextjs';
+const Stripe = require('stripe');
+const { auth } = require('@clerk/nextjs');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export default clerkMiddleware((auth, req, res) => {
+module.exports = auth((req, res) => {
   // Add CORS headers at the very top
   res.setHeader('Access-Control-Allow-Origin', 'https://www.advancers.org');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
