@@ -1,4 +1,4 @@
-// api/stripe-checkout.mjs
+// api/stripe-checkout.js
 
 import { auth } from '@clerk/nextjs';
 import Stripe from 'stripe';
