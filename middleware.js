@@ -7,13 +7,7 @@ export default authMiddleware({
   publicRoutes: ['/', '/api/stripe-webhook'],
 });
 
+// Apply middleware to all routes
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next
-     * - static files (e.g., favicon.ico, robots.txt)
-     */
-    '/((?!_next|.*\\..*).*)',
-  ],
+  matcher: '/((?!_next|.*\\..*).*)', // Matches all routes except _next and files with extensions
 };
