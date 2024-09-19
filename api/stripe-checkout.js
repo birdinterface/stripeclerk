@@ -1,11 +1,12 @@
 // api/stripe-checkout.mjs
 
-const Stripe = require('stripe');
-const { auth } = require('@clerk/nextjs');
+import { auth } from '@clerk/nextjs';
+import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default auth((req, res) => {
+  const { userId } = auth();
   // Add CORS headers at the very top
   res.setHeader('Access-Control-Allow-Origin', 'https://www.advancers.org');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
