@@ -1,16 +1,18 @@
-import Stripe from 'stripe';
-import { clerkClient } from '@clerk/nextjs/server';
-import { Readable } from 'stream';
+// api/stripe-webhook.js
 
-// Initialize the Stripe client with the secret key
+const Stripe = require('stripe');
+const { clerkClient } = require('@clerk/nextjs/server');
+const { Readable } = require('stream');
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Disable the automatic body parser for this route
-export const config = {
+exports.config = {
   api: {
-    bodyParser: false,  // Required to process the raw body for Stripe webhook signature verification
+    bodyParser: false,
   },
 };
+
+module.exports = async function handler(req, res)
 
 // Helper function to convert a stream to a buffer
 async function buffer(readable) {
