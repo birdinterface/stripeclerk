@@ -1,10 +1,9 @@
 // api/stripe-checkout.js
 
-import { Clerk } from '@clerk/clerk-sdk-node';
+import { verifyToken } from '@clerk/clerk-sdk-node';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const clerk = new Clerk({ secretKey: process.env.CLERK_SECRET_KEY });
 
 export default async (req, res) => {
   // Add CORS headers
@@ -28,8 +27,11 @@ export default async (req, res) => {
 
   try {
     // Verify the session token
-    const session = await clerk.sessions.verifySessionToken(token);
-    const userId = session.userId;
+    const tokenClaims = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
+
+    const userId = tokenClaims.sub;
 
     if (!userId) {
       console.error('Unauthorized: No user ID found.');
