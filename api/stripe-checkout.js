@@ -1,11 +1,11 @@
 // api/stripe-checkout.js
 
-import { withAuth } from '@clerk/nextjs/server';
+import { getAuth } from '@clerk/nextjs/server';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export default withAuth(async (req, res) => {
+export default async (req, res) => {
   // Add CORS headers at the very top
   res.setHeader('Access-Control-Allow-Origin', 'https://www.advancers.org');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
@@ -17,8 +17,8 @@ export default withAuth(async (req, res) => {
     return res.status(200).end();
   }
 
-  // Access authentication context from req.auth
-  const { userId } = req.auth;
+  // Now handle authentication
+  const { userId } = getAuth(req);
 
   if (!userId) {
     console.error('Unauthorized access attempt: No user ID found.');
@@ -56,4 +56,4 @@ export default withAuth(async (req, res) => {
     res.setHeader('Allow', ['POST']);
     res.status(405).end('Method Not Allowed');
   }
-});
+};
