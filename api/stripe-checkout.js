@@ -53,6 +53,7 @@ export default async (req, res) => {
         success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/platform`,
         cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,
         client_reference_id: userId,
+        automatic_tax: { enabled: true },
       });
 
       console.log('Stripe Checkout Session created:', stripeSession);
