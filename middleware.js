@@ -1,12 +1,10 @@
 // middleware.js
 
-import { authMiddleware } from '@clerk/nextjs';
+import { authMiddleware } from '@clerk/nextjs/edge';
 
 export default authMiddleware({
+  // Define your public routes here
   publicRoutes: ['/', '/api/stripe-webhook'],
-  afterAuth(auth, req) {
-    console.log(`Middleware executed for ${req.url}`);
-  },
 });
 
 export const config = {
