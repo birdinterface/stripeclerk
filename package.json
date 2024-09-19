@@ -7,12 +7,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.21",
     "@clerk/nextjs": "^5.0.0",
-    "@clerk/clerk-sdk-node": "^4.9.1",
-    "stripe": "^8.0.0",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "stripe": "^8.0.0"
   },
   "engines": {
     "node": ">=14.0.0"
