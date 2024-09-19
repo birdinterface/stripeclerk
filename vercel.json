@@ -2,11 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/stripe-checkout.js",
+      "src": "api/stripe-checkout.mjs",
       "use": "@vercel/node"
     },
     {
-      "src": "api/stripe-webhook.js",
+      "src": "api/stripe-webhook.mjs",
       "use": "@vercel/node"
     },
     {
