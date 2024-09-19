@@ -1,12 +1,11 @@
 // middleware.js
 
-import { authMiddleware } from '@clerk/nextjs/edge';
+// No imports from '@clerk/nextjs' or '@clerk/nextjs/edge'
 
-export default authMiddleware({
-  // Define your public routes here
-  publicRoutes: ['/', '/api/stripe-webhook'],
-});
+export default (req) => {
+  // Minimal middleware logic, if any
+};
 
 export const config = {
-  matcher: '/((?!_next|.*\\..*).*)',
+  matcher: '/((?!_next/static|favicon.ico).*)',
 };
