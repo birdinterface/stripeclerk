@@ -3,11 +3,12 @@
 import { authMiddleware } from '@clerk/nextjs';
 
 export default authMiddleware({
-  // Define your public routes here
   publicRoutes: ['/', '/api/stripe-webhook'],
+  afterAuth(auth, req) {
+    console.log(`Middleware executed for ${req.url}`);
+  },
 });
 
-// Apply middleware to all routes
 export const config = {
-  matcher: '/((?!_next|.*\\..*).*)', // Matches all routes except _next and files with extensions
+  matcher: '/((?!_next|.*\\..*).*)',
 };
