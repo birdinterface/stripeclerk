@@ -1,4 +1,4 @@
-// api/stripe-checkout.js
+// api/stripe-checkout.mjs
 
 const Stripe = require('stripe');
 const { auth } = require('@clerk/nextjs');
