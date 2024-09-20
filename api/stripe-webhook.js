@@ -1,26 +1,31 @@
 // api/stripe-webhook.js
 
-const Stripe = require('stripe');
-const { clerkClient } = require('@clerk/nextjs/server');
-const { Readable } = require('stream');
+import Stripe from 'stripe';
+import { Clerk } from '@clerk/clerk-sdk-node';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-exports.config = {
+export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: false, // Disable Next.js's default body parsing
   },
 };
 
-module.exports = async function handler(req, res)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const clerk = new Clerk({ secretKey: process.env.CLERK_SECRET_KEY });
 
-// Helper function to convert a stream to a buffer
-async function buffer(readable) {
-  const chunks = [];
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-  }
-  return Buffer.concat(chunks);
+function parseRawBody(req) {
+  return new Promise((resolve, reject) => {
+    let data = '';
+    req.setEncoding('utf8');
+    req.on('data', (chunk) => {
+      data += chunk;
+    });
+    req.on('end', () => {
+      resolve(Buffer.from(data));
+    });
+    req.on('error', (err) => {
+      reject(err);
+    });
+  });
 }
 
 export default async function handler(req, res) {
@@ -28,41 +33,38 @@ export default async function handler(req, res) {
     let event;
 
     try {
-      // Read the raw body from the request
-      const buf = await buffer(req);
+      const buf = await parseRawBody(req);
       const sig = req.headers['stripe-signature'];
 
-      // Verify the webhook signature with Stripe
       event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err) {
-      console.error(`Webhook signature verification failed: ${err.message}`);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
+      console.error('Error verifying Stripe webhook signature:', err.message);
+      res.status(400).send(`Webhook Error: ${err.message}`);
+      return;
     }
 
-    // Handle the Stripe checkout session completion event
-    if (event.type === 'checkout.session.completed') {
-      const session = event.data.object;
-      const userId = session.client_reference_id;
+    // Handle the event
+    switch (event.type) {
+      case 'checkout.session.completed':
+        const session = event.data.object;
+        const userId = session.client_reference_id; // Clerk user ID passed during checkout
 
-      if (userId) {
         try {
-          // Update Clerk user metadata to reflect the purchase
-          await clerkClient.users.updateUser(userId, {
-            publicMetadata: {
-              hasPurchased: true,
-            },
+          // Update the user as hasPurchased
+          await clerk.users.updateUser(userId, {
+            publicMetadata: { hasPurchased: true },
           });
+          console.log('User marked as hasPurchased:', userId);
         } catch (error) {
-          console.error('Error updating user metadata:', error);
-          return res.status(500).send('Error updating user metadata');
+          console.error('Error updating user in Clerk:', error);
         }
-      }
+        break;
+      default:
+        console.warn(`Unhandled event type ${event.type}`);
     }
 
-    // Return a successful response to Stripe
     res.json({ received: true });
   } else {
-    // Handle unsupported methods
     res.setHeader('Allow', 'POST');
     res.status(405).end('Method Not Allowed');
   }
