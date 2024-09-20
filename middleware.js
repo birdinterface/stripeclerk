@@ -3,13 +3,17 @@
 import { NextResponse } from 'next/server';
 
 export function middleware(req) {
-  // No middleware logic for now
+  // Exclude the Stripe webhook endpoint from middleware
+  if (req.nextUrl.pathname.startsWith('/api/stripe-webhook')) {
+    return NextResponse.next();
+  }
+
+  // Your existing middleware logic
   return NextResponse.next();
 }
 
-// Exclude API routes from middleware to prevent Edge Function issues
 export const config = {
   matcher: [
-    '/((?!api/).*)', // Matches all paths except those starting with '/api/'
+    '/((?!api/stripe-webhook).*)', // Exclude '/api/stripe-webhook' from middleware
   ],
 };
