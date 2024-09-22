@@ -45,8 +45,7 @@ export default async (req, res) => {
       const stripeSession = await stripe.checkout.sessions.create({
         line_items: [
           {
-            price: 'price_1PyZeWFT3MWkDNHt66US6J7n', // Replace with your actual Stripe price ID
-            quantity: 1,
+            price: 'price_1Q1nLlFT3MWkDNHtJDJjoUcO', // Replace with your actual Stripe price ID
           },
         ],
         mode: 'payment',
